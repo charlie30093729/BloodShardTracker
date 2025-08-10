@@ -1,0 +1,96 @@
+﻿<Window x:Class="BloodShardTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Blood Shard Tracker" Height="600" Width="1100"
+        Background="#111827">
+    <DockPanel Margin="5">
+
+        <!-- Top stats panel (use Border for padding) -->
+        <Border DockPanel.Dock="Top" Background="#0F172A" Margin="0,0,0,8" Padding="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Blood Shards:" Foreground="LightBlue" FontSize="20" Margin="0,0,10,0"/>
+                <TextBlock Text="Total " Foreground="White" FontSize="16"/>
+                <TextBlock x:Name="TotalCount" Foreground="White" FontSize="16" Margin="0,0,20,0"/>
+                <TextBlock Text="— Total GP " Foreground="White" FontSize="16"/>
+                <TextBlock x:Name="TotalGp" Foreground="LightGreen" FontSize="16" Margin="0,0,20,0"/>
+                <TextBlock Text="— Avg " Foreground="White" FontSize="16"/>
+                <TextBlock x:Name="AvgGp" Foreground="LightGreen" FontSize="16"/>
+                <Button Content="Save" Click="Save_Click" Margin="20,0,5,0" />
+                <Button Content="Load" Click="Load_Click" Margin="5,0,5,0" />
+                <Button Content="Clear All" Click="ClearAll_Click" Margin="5,0,0,0" Background="DarkRed" Foreground="White"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main content -->
+        <Grid Margin="0,0,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left column -->
+            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                <!-- Manual add -->
+                <GroupBox Header="Add a shard manually" Foreground="White" Margin="0,0,0,8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <TextBlock Text="When:" Foreground="White" VerticalAlignment="Center"/>
+                            <DatePicker x:Name="DateInput" Width="140" Margin="5,0"/>
+                            <TextBox x:Name="HourInput" Width="30" Margin="5,0" ToolTip="HH"/>
+                            <TextBlock Text=":" Foreground="White" VerticalAlignment="Center"/>
+                            <TextBox x:Name="MinuteInput" Width="30" Margin="5,0" ToolTip="mm"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <TextBlock Text="Price (gp):" Foreground="White" VerticalAlignment="Center"/>
+                            <TextBox x:Name="PriceInput" Width="120" Margin="5,0"/>
+                            <Button Content="Add" Click="Add_Click" Margin="5,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Paste + Parse -->
+                <GroupBox Header="Paste Discord channel and Parse (only lines with 'Vyrewatch Sentinel' will be imported)" Foreground="White">
+                    <DockPanel>
+                        <TextBox x:Name="PasteInput" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="220" DockPanel.Dock="Top" Margin="0,0,0,5"/>
+                        <Button Content="Parse &amp; Add" Click="Parse_Click" Height="30"/>
+                    </DockPanel>
+                </GroupBox>
+
+                <TextBlock Text="Tip: You can edit prices directly in the table. All totals update instantly."
+                           Foreground="Gray" FontSize="10" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- Right column -->
+            <DataGrid x:Name="grid"
+                      Grid.Column="1"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="True"
+                      Background="#111827"
+                      Foreground="White"
+                      RowBackground="#1E1E1E"
+                      AlternatingRowBackground="#2A2A2A"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="None">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="DimGray"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="When" Binding="{Binding When, StringFormat=\{0:yyyy-MM-dd HH:mm\}}" Width="180" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Price (gp)" Binding="{Binding PriceGp}" Width="160"/>
+                    <DataGridTextColumn Header="Display" Binding="{Binding Display}" Width="180" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Footer -->
+        <TextBlock Text="Made for Vyrewatch Sentinel blood shard tracking. Save file: bloodshards.json in the app folder."
+                   DockPanel.Dock="Bottom" Foreground="Gray" FontSize="10" Margin="0,5,0,0"/>
+    </DockPanel>
+</Window>
