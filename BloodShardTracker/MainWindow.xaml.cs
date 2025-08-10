@@ -130,10 +130,33 @@ namespace BloodShardTracker
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            var json = JsonSerializer.Serialize(_drops, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(saveFile, json);
-            MessageBox.Show("Saved.");
+            var ans = MessageBox.Show(
+                "Save now? This will overwrite your current bloodshards.json.",
+                "Confirm Save",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (ans != MessageBoxResult.Yes) return;
+
+            try
+            {
+                // If you're using a fixed path (e.g., Documents), make sure the folder exists:
+                var dir = Path.GetDirectoryName(saveFile);
+                if (!string.IsNullOrEmpty(dir))
+                    Directory.CreateDirectory(dir);
+
+                var json = JsonSerializer.Serialize(_drops, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(saveFile, json);
+
+                MessageBox.Show("Saved.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Save failed: " + ex.Message);
+            }
         }
+
+
 
         private void Load_Click(object sender, RoutedEventArgs e)
         {
